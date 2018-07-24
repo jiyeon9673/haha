@@ -1,0 +1,45 @@
+<div class="container">
+    <a href="/">
+          <button type="button" class="btn btn-light">HOME</button>
+    </a><br>
+    <h1><%= @post.title %></h1><hr />
+    <div style="text-align:right;">
+        <div><%= @post.created_at.to_s.split("+").first %>, <%= time_ago_in_words(@post.created_at) %> ago</div>
+        <div><%= @post.user.username %></div>
+        <a href="/post/edit/<%= @post.id %>">
+            <span class="badge badge-secondary">수정</span>
+        </a>
+        <a href="/post/destroy/<%= @post.id %>">
+            <span class="badge badge-dark">삭제</span>
+        </a>
+        <div>???명이 좋아합니다</div>
+        <% if current_user.is_like(@post) %>
+        <a herf="/likes/likes_taggle/<%= @post.id %>">좋아요 취소</a>
+        
+        <% else %>
+        <a herf="">좋아요 </a>
+    </div>
+    <p><%= simple_format( @post.content) %></p>
+    <% unless @post.image.nil? %>
+        <%= image_tag @post.image%>
+        <%= image_tag @post.thumb %>
+        <%= image_tag @post.middle %>
+    <% end %>
+    <br>
+    <br><hr>
+    <% @post.replies.each do |r| %>
+        <%= r.user.username %> : <%= r.content %>
+        <a href="/reply/destroy/<%= r.id %>">
+            <span class="badge badge-dark">X</span>
+        </a><br>
+      <% end %>
+    <br>
+    <br>
+    <form action= "/reply/create" method="post">
+        <input name="post_id" value="<%=@post.id%>" hidden="true">
+        <div class= "row">
+            <textarea name="content" class="form-control col-11" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <button type="submit" class="btn btn-dark">댓글 작성</button>
+        </div>
+    </form>
+</div>
